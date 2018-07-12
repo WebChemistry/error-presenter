@@ -1,0 +1,12 @@
+{
+	"name": "webchemistry/error-presenter",
+	"type": "library",
+	"autoload": {
+		"psr-4": {
+			"WebChemistry\\ErrorPresenter\\": ["src/"]
+		}
+	},
+	"require": {
+		"php": ">= 7.1"
+	}
+}
