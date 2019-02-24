@@ -1,8 +1,0 @@
-<?php
-
-$code = (int) ($code ?? 404);
-$data = \WebChemistry\ErrorPresenter\ErrorPresenter::$messages[$code] ?? \WebChemistry\ErrorPresenter\ErrorPresenter::$messages[404];
-$home = \WebChemistry\ErrorPresenter\ErrorPresenter::$home;
-$homepage = \WebChemistry\ErrorPresenter\ErrorPresenter::getHomepage();
-
-require __DIR__ . '/layout.phtml';

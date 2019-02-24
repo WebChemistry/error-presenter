@@ -1,0 +1,14 @@
+<?php
+
+use WebChemistry\ErrorPresenter\ErrorHelper;
+
+$config = ErrorHelper::getConfig();
+
+$data = $config['messages'][$code] ?? $config[404];
+$home = $config['home'] ?? null;
+$layout = $config['layout'] ?? __DIR__ . '/layout.phtml';
+$homepage = ErrorHelper::getHomepage();
+$primary = $config['colors']['primary'];
+$secondary = $config['colors']['secondary'];
+
+require_once $layout;
