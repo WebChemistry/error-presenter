@@ -49,8 +49,7 @@ final class ErrorExtension extends CompilerExtension {
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('helper'))
-			->setType(ErrorHelper::class)
-			->addTag('run');
+			->setType(ErrorHelper::class);
 	}
 
 	public function beforeCompile() {
@@ -76,6 +75,7 @@ final class ErrorExtension extends CompilerExtension {
 		$init->addBody(ErrorPresenter::class . '::$messages = ' . var_export($config['messages'], true) . ';');
 		$init->addBody(ErrorPresenter::class . '::$home = ' . var_export($config['home'], true) . ';');
 		$init->addBody(ErrorPresenter::class . '::$homepage = ' . var_export($config['homepage'], true) . ';');
+		$init->addBody('$this->getService(?);', [$this->prefix('helper')]);
 	}
 
 }
