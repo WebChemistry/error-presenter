@@ -10,20 +10,22 @@
 	}
 
 	#notfound {
-		position: relative;
-		height: 100vh;
+		all: initial;
+		position: fixed;
+		user-select: none;
+		background: #fff;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
 	}
 
 	#notfound .notfound {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		-webkit-transform: translate(-50%, -50%);
-		-ms-transform: translate(-50%, -50%);
-		transform: translate(-50%, -50%);
-	}
-
-	.notfound {
+		all: initial;
 		max-width: 767px;
 		width: 100%;
 		line-height: 1.4;
@@ -79,7 +81,7 @@
 		color: <?= $primary ?>;
 		font-weight: 200;
 		text-decoration: none;
-		border-bottom: 1px dashed <?= $primary ?>;
+		border-bottom: 1px dashed<?= $primary ?>;
 		border-radius: 2px;
 	}
 
@@ -110,7 +112,7 @@
 		}
 
 		.notfound .notfound-404 h1 {
-			font-size: 142px;
+			font-size: 100px;
 		}
 
 		.notfound h2 {
