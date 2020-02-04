@@ -14,7 +14,7 @@ final class ErrorHelper {
 
 	/** @var array */
 	protected static $config = [
-		'home' => 'Zpět na domovskou stránku',
+		'home' => 'Homepage',
 		'homepage' => null,
 		'messages' => [
 			400 => [

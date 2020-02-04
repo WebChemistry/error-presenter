@@ -2,9 +2,11 @@
 
 namespace WebChemistry\ErrorPresenter\DI;
 
-use Nette;
+use Nette\Application\Application;
+use Nette\Application\IPresenterFactory;
 use Nette\DI\CompilerExtension;
-use Thunbolt\Application\DI\ApplicationExtension;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nette\PhpGenerator\ClassType;
 use Tracy\Debugger;
 use WebChemistry\ErrorPresenter\ErrorHelper;
 use WebChemistry\ErrorPresenter\ErrorPresenter;
@@ -36,7 +38,7 @@ final class ErrorExtension extends CompilerExtension {
 				'desc' => 'Something goes wrong with our servers, please try again later.',
 			],
 		],
-		'home' => 'Domovská stránka',
+		'home' => 'Homepage',
 		'homepage' => null,
 		'colors' => [
 			'primary' => '#ff6f68',
@@ -45,35 +47,34 @@ final class ErrorExtension extends CompilerExtension {
 		'layout' => null,
 	];
 
-	public function loadConfiguration() {
+	public function loadConfiguration(): void {
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('helper'))
 			->setType(ErrorHelper::class);
 	}
 
-	public function beforeCompile() {
+	public function beforeCompile(): void {
 		$builder = $this->getContainerBuilder();
-		$def = $builder->getDefinitionByType(Nette\Application\IPresenterFactory::class);
-		if (class_exists(ApplicationExtension::class)) {
-			$def->addSetup('addMapping', [
-				'Error', new Nette\DI\Statement(PresenterMapping::class),
-			]);
-		} else {
-			$def->addSetup('setMapping', ['Error', ['WebChemistry\\ErrorPresenter\\', '*\\', '*Presenter']]);
-		}
 
-		$builder->getDefinitionByType(Nette\Application\Application::class)
-			->addSetup('$errorPresenter', ['Error:Error']);
+		/** @var ServiceDefinition $def */
+		$def = $builder->getDefinitionByType(IPresenterFactory::class);
+		$def->addSetup('setMapping', [
+			['Error' => 'WebChemistry\ErrorPresenter\*Presenter']
+		]);
+
+		/** @var ServiceDefinition $def */
+		$def = $builder->getDefinitionByType(Application::class);
+		$def->addSetup('$errorPresenter', ['Error:Error']);
 	}
 
-	public function afterCompile(Nette\PhpGenerator\ClassType $class) {
+	public function afterCompile(ClassType $class) {
 		$init = $class->getMethods()['initialize'];
 		$config = $this->validateConfig($this->defaults);
-		
+
+		$init->addBody('$this->getService(?);', [$this->prefix('helper')]);
 		$init->addBody(Debugger::class . '::$errorTemplate = ?;', [__DIR__ . '/../templates/tracy.phtml']);
 		$init->addBody(ErrorHelper::class . '::setConfig(' . var_export($config, true) . ');');
-		$init->addBody('$this->getService(?);', [$this->prefix('helper')]);
 	}
 
 }
