@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name=“robots“ content=“noindex, nofollow“>
-	<title><?= $code; ?> <?= htmlspecialchars($data['title'], ENT_QUOTES); ?></title>
+	<title><?= $code; ?> <?= htmlspecialchars($data['title'] ?? '', ENT_QUOTES); ?></title>
 
 	<link href="https://fonts.googleapis.com/css?family=Kanit:200" rel="stylesheet">
 	<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACGElEQVQ4T32Tz2sTURDHvzO7sk2x/qhoFW1ibOPV1lOrIhgvevJQixA2lwpR6EXwHxHE2haUUEMvIeBRDy0iaHpQWjzZ2rQmRTFKKCWSZGv2PXlvm5ismjm9me/MZ2b2vSX4LGvb5yVwh4SICiCkZebPBrDoCjF9cX5+pbWEGs67RKK7Xq0+lFJO+KGtvgRm4Tj3LqTTVRXXAFXsVCovGbjUqbihEfBaOM41BdGApXj8ib8zMeHMWAgSwGYmDynU6Y8RMDOSSt0ltTOA9/7OvcO9OBU9ocNbC1+xvbL913BCiGF6a9szBCRaVTNg4OztCLZ2vK79BwirT9fhVuttEAE8pmws9gnMg61K39Xj6Bs6gky2osNjo90oLpdQXPzmX2OV3sRiu8y8r6F0He1CJD4AIrQBpATWnuXg/Kg1IQLYbQcQIXQziIPB/Tpp83tdX9PpY6b2d/I/kc8UAEUD4AFse42BiAr0DPYgfCPY7LBR/AUiQngPoKHPCyjnyl4O0Udasu1p9fLUzJGJAQQOWU2AfwIlVEo1rCdzOkdK+UitMMTMywrQfyuIwye98f9npUIZX9IFbwDmc/ohNa6y4rrYdd2OAMswEDAMlTM1mkpNeoDx8QBb1gsJXO5YvSdK4JVjmtevJJO15s+kILCsB/5H9Q/gVM0076tivYY/QX0TMCcMIOoCYaUz0YYUYoENY3Zkbu5Da81vy0LHK9paYv0AAAAASUVORK5CYII=" sizes="16x16">
@@ -17,10 +17,10 @@
 		<div class="notfound-404">
 			<h1><?php echo $code; ?></h1>
 		</div>
-		<h2><?= htmlspecialchars($data['title'], ENT_QUOTES); ?></h2>
-		<p><?= htmlspecialchars($data['desc'], ENT_QUOTES); ?></p>
+		<h2><?= htmlspecialchars($data['title'] ?? '', ENT_QUOTES); ?></h2>
+		<p><?= htmlspecialchars($data['desc'] ?? '', ENT_QUOTES); ?></p>
 		<p>
-			<a href="<?= $homepage ?>"><?= htmlspecialchars($home, ENT_QUOTES); ?></a>
+			<a href="<?= $homepage ?>"><?= htmlspecialchars($home ?? 'Homepage', ENT_QUOTES); ?></a>
 		</p>
 	</div>
 </div>

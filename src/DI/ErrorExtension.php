@@ -7,16 +7,23 @@ use Nette\Application\IPresenterFactory;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\PhpGenerator\ClassType;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 use Tracy\Debugger;
 use WebChemistry\ErrorPresenter\ErrorHelper;
 use WebChemistry\ErrorPresenter\ErrorPresenter;
 use WebChemistry\ErrorPresenter\PresenterMapping;
 
-final class ErrorExtension extends CompilerExtension {
+final class ErrorExtension extends CompilerExtension
+{
 
-	/** @var array */
-	public $defaults = [
+	/** @var mixed[] */
+	public array $defaults = [
 		'messages' => [
+			null => [
+				'title' => 'Unknown error',
+				'desc' => 'Something goes wrong, please try again later.',
+			],
 			400 => [
 				'title' => 'Bad request',
 				'desc' => 'The server cannot process the request due to something that is perceived to be a client error.',
@@ -39,7 +46,6 @@ final class ErrorExtension extends CompilerExtension {
 			],
 		],
 		'home' => 'Homepage',
-		'homepage' => null,
 		'colors' => [
 			'primary' => '#ff6f68',
 			'secondary' => '#ffa34f',
@@ -47,14 +53,16 @@ final class ErrorExtension extends CompilerExtension {
 		'layout' => null,
 	];
 
-	public function loadConfiguration(): void {
+	public function loadConfiguration(): void
+	{
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('helper'))
 			->setType(ErrorHelper::class);
 	}
 
-	public function beforeCompile(): void {
+	public function beforeCompile(): void
+	{
 		$builder = $this->getContainerBuilder();
 
 		/** @var ServiceDefinition $def */
@@ -68,7 +76,8 @@ final class ErrorExtension extends CompilerExtension {
 		$def->addSetup('$errorPresenter', ['Error:Error']);
 	}
 
-	public function afterCompile(ClassType $class) {
+	public function afterCompile(ClassType $class)
+	{
 		$init = $class->getMethods()['initialize'];
 		$config = $this->validateConfig($this->defaults);
 

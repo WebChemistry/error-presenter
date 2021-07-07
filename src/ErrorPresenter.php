@@ -9,27 +9,24 @@ use Nette\Application\Responses;
 
 class ErrorPresenter implements IPresenter {
 
-	/** @var ILogger */
-	protected $logger;
+	protected bool $log400 = false;
 
-	/** @var bool */
-	protected $log400 = false;
-
-	public function __construct(ILogger $logger) {
-		$this->logger = $logger;
+	public function __construct(
+		protected ILogger $logger,
+	)
+	{
 	}
 
 	/**
 	 * @param bool $log400
 	 */
-	public function setLog400(bool $log400 = true): void {
+	public function setLog400(bool $log400 = true): void
+	{
 		$this->log400 = $log400;
 	}
 
-	/**
-	 * @return Nette\Application\IResponse
-	 */
-	public function run(Nette\Application\Request $request): Nette\Application\IResponse {
+	public function run(Nette\Application\Request $request): Nette\Application\IResponse
+	{
 		$e = $request->getParameter('exception');
 		if ($e instanceof Nette\Application\BadRequestException) {
 			if ($this->log400) {

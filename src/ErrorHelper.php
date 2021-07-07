@@ -9,38 +9,36 @@ use Nette\Http\IRequest;
  */
 final class ErrorHelper {
 
-	/** @var string */
-	public static $basePath = '/';
+	public static string $basePath = '/';
 
-	/** @var array */
-	protected static $config = [
+	/** @var mixed[] */
+	protected static array $config = [
 		'home' => 'Homepage',
 		'homepage' => null,
 		'messages' => [
+			null => [
+				'title' => 'Unknown error',
+				'desc' => 'Something goes wrong, please try again later.',
+			],
 			400 => [
 				'title' => 'Bad request',
 				'desc' => 'The server cannot process the request due to something that is perceived to be a client error.',
-				'image' => __DIR__ . '/../templates/404.png',
 			],
 			401 => [
 				'title' => 'Unauthorized',
 				'desc' => 'The requested resource requires an authentication.',
-				'image' => __DIR__ . '/../templates/404.png',
 			],
 			403 => [
 				'title' => 'Access denied',
 				'desc' => 'The requested resource requires an authentication.',
-				'image' => __DIR__ . '/../templates/404.png',
 			],
 			404 => [
 				'title' => 'Oops page not found',
 				'desc' => 'The page you are looking for does not exist or has been moved.',
-				'image' => __DIR__ . '/../templates/404.png',
 			],
 			500 => [
 				'title' => 'Internal server error',
 				'desc' => 'Something goes wrong with our servers, please try again later.',
-				'image' => __DIR__ . '/../templates/500.png',
 			],
 		],
 		'colors' => [
@@ -50,19 +48,26 @@ final class ErrorHelper {
 		'layout' => null,
 	];
 
-	public function __construct(IRequest $request) {
+	public function __construct(IRequest $request)
+	{
 		self::$basePath = $request->getUrl()->getBasePath();
 	}
 
-	public static function setConfig(array $config) {
+	public static function setConfig(array $config): void
+	{
 		self::$config = $config;
 	}
 
-	public static function getConfig(): array {
+	/**
+	 * @return mixed[]
+	 */
+	public static function getConfig(): array
+	{
 		return self::$config;
 	}
 
-	public static function getHomepage(): ?string {
+	public static function getHomepage(): ?string
+	{
 		return self::$config['homepage'] ?? ErrorHelper::$basePath;
 	}
 
