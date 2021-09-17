@@ -3,6 +3,7 @@
 namespace WebChemistry\ErrorPresenter;
 
 use Nette\Application\IPresenter;
+use Tracy\Debugger;
 use Tracy\ILogger;
 use Nette;
 use Nette\Application\Responses;
@@ -12,9 +13,10 @@ class ErrorPresenter implements IPresenter {
 	protected bool $log400 = false;
 
 	public function __construct(
-		protected ILogger $logger,
+		protected ?ILogger $logger,
 	)
 	{
+		$this->logger ??= Debugger::getLogger();
 	}
 
 	/**
@@ -29,14 +31,16 @@ class ErrorPresenter implements IPresenter {
 	{
 		$e = $request->getParameter('exception');
 		if ($e instanceof Nette\Application\BadRequestException) {
-			if ($this->log400) {
+			if ($this->log400 && $this->logger) {
 				$this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
 			}
 			$code = $e->getHttpCode();
 		} else {
 			$code = 500;
 
-			$this->logger->log($e, ILogger::EXCEPTION);
+			if ($this->logger) {
+				$this->logger->log($e, ILogger::EXCEPTION);
+			}
 		}
 
 		return new Responses\CallbackResponse(function () use ($code) {
