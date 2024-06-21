@@ -1,14 +1,7 @@
 <?php
 
-use WebChemistry\ErrorPresenter\ErrorHelper;
+use WebChemistry\ErrorPresenter\ErrorTemplateSingleton;
 
-$config = ErrorHelper::getConfig();
-
-$data = $config['messages'][$code] ?? $config['messages'][null] ?? [];
-$home = $config['home'] ?? null;
-$layout = $config['layout'] ?? __DIR__ . '/layout.phtml';
-$homepage = ErrorHelper::getHomepage();
-$primary = $config['colors']['primary'];
-$secondary = $config['colors']['secondary'];
+$template = ErrorTemplateSingleton::get();
 
 require_once $layout;

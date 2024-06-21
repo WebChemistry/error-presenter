@@ -1,5 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
+
+use WebChemistry\ErrorPresenter\ErrorTemplateSingleton;
 
 $code = 500;
+$template = ErrorTemplateSingleton::get();
 
-require_once __DIR__ . '/error.phtml';
+require_once $template->values['template']['file'];

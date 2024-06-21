@@ -2,11 +2,11 @@
 
 namespace WebChemistry\ErrorPresenter;
 
+use Nette;
 use Nette\Application\IPresenter;
+use Nette\Application\Responses;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use Nette;
-use Nette\Application\Responses;
 
 class ErrorPresenter implements IPresenter {
 
@@ -44,7 +44,9 @@ class ErrorPresenter implements IPresenter {
 		}
 
 		return new Responses\CallbackResponse(function () use ($code) {
-			require __DIR__ . '/templates/error.phtml';
+			$template = ErrorTemplateSingleton::get();
+			
+			require $template->values['template']['file'];
 		});
 	}
 
