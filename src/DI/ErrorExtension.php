@@ -2,20 +2,43 @@
 
 namespace WebChemistry\ErrorPresenter\DI;
 
-use Nette\Application\Application;
-use Nette\Application\IPresenterFactory;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Definitions\ServiceDefinition;
 use Nette\PhpGenerator\ClassType;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use Tracy\Debugger;
 use WebChemistry\ErrorPresenter\ErrorTemplate;
 use WebChemistry\ErrorPresenter\ErrorTemplateSingleton;
-use WebChemistry\ErrorPresenter\PresenterMapping;
 
 final class ErrorExtension extends CompilerExtension
 {
+
+	private const array Messages = [
+		'default' => [
+			'title' => 'Unknown error',
+			'desc' => 'Something goes wrong, please try again later.',
+		],
+		400 => [
+			'title' => 'Bad request',
+			'desc' => 'The server cannot process the request due to something that is perceived to be a client error.',
+		],
+		401 => [
+			'title' => 'Unauthorized',
+			'desc' => 'The requested resource requires an authentication.',
+		],
+		403 => [
+			'title' => 'Access denied',
+			'desc' => 'The requested resource requires an authentication.',
+		],
+		404 => [
+			'title' => 'Oops page not found',
+			'desc' => 'The page you are looking for does not exist or has been moved.',
+		],
+		500 => [
+			'title' => 'Internal server error',
+			'desc' => 'Something goes wrong with our servers, please try again later.',
+		],
+	];
 
 	public function getConfigSchema(): Schema
 	{
@@ -62,27 +85,33 @@ final class ErrorExtension extends CompilerExtension
 			->setFactory(ErrorTemplate::class, [$config]);
 	}
 
-	public function beforeCompile(): void
-	{
-		$builder = $this->getContainerBuilder();
-
-		/** @var ServiceDefinition $def */
-		$def = $builder->getDefinitionByType(IPresenterFactory::class);
-		$def->addSetup('setMapping', [
-			['Error' => 'WebChemistry\ErrorPresenter\*Presenter']
-		]);
-
-		/** @var ServiceDefinition $def */
-		$def = $builder->getDefinitionByType(Application::class);
-		$def->addSetup('$errorPresenter', ['Error:Error']);
-	}
-
 	public function afterCompile(ClassType $class)
 	{
 		$init = $class->getMethods()['initialize'];
 
-		$init->addBody('new ' . ErrorTemplateSingleton::class . '($this->getService(?));', [$this->prefix('template')]);
+		$init->addBody(ErrorTemplateSingleton::class . '::initialize($this->getService(?));', [$this->prefix('template')]);
 		$init->addBody(Debugger::class . '::$errorTemplate = ?;', [__DIR__ . '/../templates/tracy.phtml']);
+	}
+
+	/**
+	 * @param array<string, mixed> $templateOptions
+	 */
+	public static function startup(
+		?string $templateFile = null, 
+		array $templateOptions = [],
+		string $homeUrl = '/',
+	): void
+	{
+		ErrorTemplateSingleton::intialize(new ErrorTemplate([
+			'messages' => self::Messages,
+			'home' => $homeUrl,
+			'template' => [
+				'file' => $templateFile ?? __DIR__ . '/../templates/layout.phtml',
+				'options' => $templateOptions,
+			],
+		]));
+		
+		Debugger::$errorTemplate = __DIR__ . '/../templates/tracy.phtml';
 	}
 
 }

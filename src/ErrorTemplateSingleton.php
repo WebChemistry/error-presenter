@@ -7,7 +7,7 @@ final class ErrorTemplateSingleton
 	
 	private static ErrorTemplate $errorTemplate;
 	
-	public function __construct(ErrorTemplate $errorTemplate)
+	public static function intialize(ErrorTemplate $errorTemplate): void
 	{
 		self::$errorTemplate = $errorTemplate;
 	}

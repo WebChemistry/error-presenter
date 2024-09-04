@@ -7,9 +7,8 @@ final class ErrorTemplate
 
 	/**
 	 * @param array{
-	 *     messages: array<int, array{title: string, desc: string}>,
+	 *     messages: array<int|string, array{title: string, desc: string}>,
 	 *     home: string,
-	 *     colors: array{primary: string, secondary: string},
 	 *     template: array{file: string, options: array<string, mixed>},
 	 * } $values
 	 */
